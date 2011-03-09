@@ -1,0 +1,27 @@
+This is a small library of Objective-C classes that wrap the Google Maps API Web Services (http://code.google.com/apis/maps/documentation/webservices/index.html). It was designed to compile and run on the iOS SDK.
+
+What's included right now:
+
+* Geocoding (find location of an address).
+* Places (kind of beta).
+
+Reverse geocoding isn't implemented here, because we have `MKReverseGeocoder`.
+
+Usage is quite simple for the geocoder:
+
+    GMAGeocoderRequest *request = [[GMAGeocoderRequest alloc] initWithQuery: @"1600 Amphitheatre Parkway, Mountain View, CA"];
+    request.delegate = your_delegate;
+    [request beginRequest];
+
+And in a class that conforms to `GMARequestDelegate`, handle the geocoder response with `mapsRequest:didReceiveResponse`. For the geocoder, each response will be an instance of `GMAGeocoderResponse`, which contains zero or more `GMAGeocoderResult` objects:
+
+    GMAGeocoderResponse *response = ...;
+    for (GMAGeocoderResult *r in response)
+    {
+        NSLog(@"coordinate: %f, %f", r.coordinate.latitude, r.coordinate.longitude);
+        NSLog(@"formatted address: %@", r.formattedAddress);
+        NSLog(@"viewport: nw:%f,%f; se:%f,%f", r.viewport.northwest.latitude,
+              r.viewport.nortwest.longitude, r.viewport.southeast.latitude,
+              r.viewport.southeast.longitude);
+        NSLog(@"address dictionary: %@", r.addressDictionary);
+    }
